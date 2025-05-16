@@ -32,62 +32,15 @@ When a new security alert is triggered in Microsoft Defender for Endpoint, this 
 ## ⚙️ Power Automate Flow
 
 ### 🟢 Trigger: **When a new WDATP alert occurs**
-- **Service**: Microsoft Defender for Endpoint
-- **Auth**: App ID + Secret  
-- **Trigger**: Fires when a new security alert is created.
-
----
 
 ### 🔁 Actions
 
 #### 1. **Get Alert by ID**
-- **Connector**: Microsoft Defender
-- **Input**: `Alert ID` from the trigger
-- **Output**: Full alert details
-
----
 
 #### 2. **HTTP – Call Azure OpenAI**
-- **Method**: `POST`
-- **URI**: Your Azure OpenAI Foundry deployment endpoint
-- **Headers**:
-    "Content-Type": "application/json",
-    "api-key": "<your-api-key>"
-- {
-  "messages": [
-    {
-      "role": "system",
-      "content": "You are a security analyst investigating alerts from Microsoft Defender."
-    },
-  ],
-  "temperature": 0.2
-}
 
 ### 3.Parse JSON 
-  Content: Use Body from HTTP step
-  Schema example : {
-  "type": "object",
-  "properties": {
-    "choices": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "object",
-            "properties": {
-              "content": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
+ 
 ### 4.Compose 
-	inputs : body('Parse_JSON')?['choices']?[0]?['message']?['content']
 
 ### 5.post message in chat or channel
